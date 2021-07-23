@@ -1,4 +1,12 @@
 
+
+// Swal.fire({
+//     title: 'Error!',
+//     text: 'Do you want to continue',
+//     icon: 'error',
+//     confirmButtonText: 'Cool'
+//   })
+
 // setup container div
 const container = document.createElement('div'); //create div
 container.className = 'header-container';  // create class name for div
@@ -23,8 +31,22 @@ let rollDie = document.getElementById('rollDie'); //roll
 let sumDie = document.getElementById('sumDie'); // sum
 
 const globalArr = [];
+const dieArr = ["\u2680", "\u2681", "\u2682", "\u2683", "\u2684", "\u2685"];
 
 let divCounter = 1; 
+
+// Sweet Alert code
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  })
 
 
 class Die {
@@ -37,7 +59,7 @@ class Die {
         diceDiv.appendChild(this.div);
        
         globalArr.push(this);
-       
+        
         this.addEvents(); 
 
         this.roll();
@@ -45,17 +67,28 @@ class Die {
 
     
 
-    // this is the roll method
+    //random num generator
     randoNum(){
         let randoNum = Math.floor(Math.random()*6);
         return randoNum+1;
     }
     
+    // this is the roll method
     roll(){
         this.value = this.randoNum();
-        this.div.textContent = this.value;
-    }
 
+       
+       //  this.div.textContent = this.value;  //original - used for regular die text
+
+       this.div.textContent = dieArr[this.value-1];
+
+        Toast.fire({
+            icon: 'success',
+            title: 'Dice Rolled Successfully'
+          })
+
+
+    }
 
     addEvents(){
         
@@ -72,6 +105,12 @@ class Die {
             //globalArr.pop(this.value);
             console.log(this.div);
             console.log(globalArr);
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Dice Removed Successfully'
+              })
+
         });
     }     
 }
@@ -95,7 +134,21 @@ sumDie.addEventListener('click', () =>{
 
     }
     console.log(`Sum Die! ${result}`);
-    alert( `Sum of dice is = ${result}`);
+    // alert( `Sum of dice is = ${result}`);
+
+    Swal.fire({
+        title: `Sum of dice is = ${result}`,
+        width: 600,
+        padding: '3em',
+        // background: '#fff url(/images/trees.png)',
+        // backdrop: `
+        //   rgba(0,0,123,0.4)
+        //   url("/images/nyan-cat.gif")
+        //   left top
+        //   no-repeat
+        // `
+      })
+
     return result;
     });
 
